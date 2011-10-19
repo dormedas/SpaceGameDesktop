@@ -1,0 +1,19 @@
+ /-----------------------\
+/ SpaceGameDesktop Client \
+\         README          /
+ \-----------------------/
+
+Hello! Thanks for downloading the client's source!
+
+1: Prerequisites
+
+libcurl [ URL ]
+jsonxx  [ URL ]
+wxWidgets (soon) [ URL ]
+
+2: Building
+
+Visual Studio:
+Open .sln, hit build.
+
+3. Yay
