@@ -19,52 +19,31 @@
  * KIND, either express or implied.
  *
  ***************************************************************************/ 
-#include <stdio.h>
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <cassert>
-#include "curl/curl.h"
-#include "jsonxx\jsonxx.h"
- 
+//#include <stdio.h>
+//#include <iostream>
+//#include <string>
+//#include <sstream>
+//#include <cassert>
+#include <wx/wx.h>
+#include <wx/listctrl.h>
+#include "main.h"
+#include "systemFrame.h"
+#include "fleetFrame.h"
+#include "logInHandler.h"
+
 using namespace std;
 
-size_t write_to_string(void *ptr, size_t size, size_t count, void *stream) {
-  ((string*)stream)->append((char*)ptr, 0, size*count);
-  return size*count;
-}
+IMPLEMENT_APP(MyApp);
 
-int main(void)
+bool MyApp::OnInit()
 {
-  CURL *curl;
-  CURLcode res;
- 
-  curl = curl_easy_init();
-  string response;
-  if(curl) {
-	curl_easy_setopt(curl, CURLOPT_URL, "http://spacega.me/data/systems?game=1&page=1&start=0&limit=1000");
+	LogInHandler handler;
+	
+	SystemFrame* systemFrame = new SystemFrame(wxT("Systems"));
+	systemFrame->Show(true);
 
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_to_string);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-	res = curl_easy_perform(curl);
- 
-	/* always cleanup */ 
-	curl_easy_cleanup(curl);
-  }
-  //std::cout << response << endl;
-
-  istringstream input(response);
-  jsonxx::Object o;
-
-	assert(jsonxx::Object::parse(input, o));
-	assert(o.has<jsonxx::Array>("data"));
-
-	for(int i = 0; i < o.get<jsonxx::Array>("data").size(); ++i)
-	{
-		cout << o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<string>("name") << ": ";
-		cout << o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<jsonxx::number>("num_planets") << endl;
-	}
-
-  cin.get();
-  return 0;
+	FleetFrame* fleetFrame = new FleetFrame(wxT("Fleets"));
+	fleetFrame->Show(true);
+	
+	return true;
 }
