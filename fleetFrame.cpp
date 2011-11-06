@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <math.h>
 
 using namespace std;
 
@@ -24,8 +25,10 @@ void getFleetData(wxListCtrl& listCtrl)
 	assert(jsonxx::Object::parse(input, o));
 	assert(o.has<jsonxx::Array>("data"));
 
-	int x = 0;
-	stringstream temp;
+	int profit = 0;
+	double distance = 0,
+	       velocity = 0;
+	stringstream sstream;
 
 	string finalString;
 
@@ -33,9 +36,26 @@ void getFleetData(wxListCtrl& listCtrl)
 
 	for(int i = 0; i < o.get<jsonxx::Array>("data").size(); ++i)
 	{
-		x = o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<jsonxx::number>("profit");
-		temp << x;
-		wxString tempNum = temp.str();
+		profit = o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<jsonxx::number>("profit");
+		velocity = o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<jsonxx::number>("velocity");
+		distance = o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<jsonxx::number>("distance");
+
+		int minutesToTarget = floor(distance / velocity);
+		if(velocity == 0)
+		{
+			minutesToTarget = 0;
+		}
+		sstream << profit;
+		wxString sProfit = sstream.str();
+		sstream.str("");
+		sstream << velocity;
+		wxString sVelocity = sstream.str();
+		sstream.str("");
+		sstream << distance;
+		wxString sDistance = sstream.str();
+		sstream.str("");
+		sstream << minutesToTarget;
+		wxString sMinToTarget = sstream.str();
 
 		wxString tempName = wxString(o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<string>("name"));
 
@@ -56,10 +76,14 @@ void getFleetData(wxListCtrl& listCtrl)
 
 		listCtrl.SetItem(index, 0, tempName);
 		listCtrl.SetItem(index, 1, tempStatus);
-		listCtrl.SetItem(index, 2, tempNum);
+		listCtrl.SetItem(index, 2, sProfit);
+		listCtrl.SetItem(index, 3, sDistance);
+		listCtrl.SetItem(index, 4, sVelocity);
+		listCtrl.SetItem(index, 5, sMinToTarget);
+
 		//listCtrl.SetItem(index, 2, tempHabitable);
 
-		temp.str("");
+		sstream.str("");
 	}
 }
 
@@ -89,8 +113,18 @@ FleetFrame::FleetFrame(const wxString& title) : wxFrame(NULL, wxID_ANY, title, w
 		   
 	wxListItem col3;
 	col3.SetId(3);
-	col3.SetText( _("Habitable") );
+	col3.SetText( _("Distance") );
 	m_item_list->InsertColumn(3, col3);
+
+	wxListItem col4;
+	col4.SetId(4);
+	col4.SetText( _("Velocity") );
+	m_item_list->InsertColumn(4, col4);
+
+	wxListItem col5;
+	col5.SetId(5);
+	col5.SetText( _("Minutes til Arrival") );
+	m_item_list->InsertColumn(5, col5);
 
 	getFleetData(*m_item_list);
 
