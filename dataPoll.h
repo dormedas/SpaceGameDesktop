@@ -11,7 +11,7 @@ private:
 	std::string mSystemData;
 	std::string mFleetData;
 	std::string cookieFile;
-	boolean mLoggedIn;
+	bool mLoggedIn;
 	//size_t writeToString(void *ptr, size_t size, size_t count, void *stream);
 	void logIn(std::string username, std::string password);
 	std::string poll(std::string url);

@@ -1,7 +1,7 @@
-#include "wx\wx.h"
-#include "wx\menu.h"
+#include <wx/wx.h>
+#include <wx/menu.h>
 //#include "wx\list.h"
-#include "wx\listctrl.h"
+#include "wx/listctrl.h"
 
 class FleetFrame : public wxFrame
 {
