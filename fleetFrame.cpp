@@ -11,7 +11,7 @@ using namespace std;
 void getFleetData(wxListCtrl& listCtrl)
 {
 	DataPoll poll;
-	
+
 	string data = poll.getFleetData(1, LogInHandler::mUsername, LogInHandler::mPassword);
 	if(!poll.getState())
 	{
@@ -25,7 +25,7 @@ void getFleetData(wxListCtrl& listCtrl)
 	assert(jsonxx::Object::parse(input, o));
 	assert(o.has<jsonxx::Array>("data"));
 
-	int profit = 0;
+	long long int profit = 0;
 	double distance = 0,
 	       velocity = 0;
 	stringstream sstream;
@@ -39,27 +39,26 @@ void getFleetData(wxListCtrl& listCtrl)
 		profit = o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<jsonxx::number>("profit");
 		velocity = o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<jsonxx::number>("velocity");
 		distance = o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<jsonxx::number>("distance");
-
+		cout << profit;
+		cout << endl;
 		int minutesToTarget = floor(distance / velocity);
 		if(velocity == 0)
 		{
 			minutesToTarget = 0;
 		}
-		sstream << profit;
-		wxString sProfit = sstream.str();
-		sstream.str("");
-		sstream << velocity;
-		wxString sVelocity = sstream.str();
-		sstream.str("");
-		sstream << distance;
-		wxString sDistance = sstream.str();
-		sstream.str("");
-		sstream << minutesToTarget;
-		wxString sMinToTarget = sstream.str();
+		wxString sProfit;
+		sProfit << profit;
+		//wxString sProfit(wxT("4"), wxConvUTF8);
+		wxString sVelocity;
+		sVelocity << velocity;
+		wxString sDistance;
+		sDistance << distance;
+		wxString sMinToTarget;
+		sMinToTarget << minutesToTarget;
 
-		wxString tempName = wxString(o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<string>("name"));
+		wxString tempName(o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<string>("name").c_str(), wxConvUTF8);
 
-		wxString tempStatus = wxString(o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<string>("status"));
+		wxString tempStatus(o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<string>("status").c_str(), wxConvUTF8);
 
 		//bool y = o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<bool>("hasHabitable");
 
@@ -109,21 +108,25 @@ FleetFrame::FleetFrame(const wxString& title) : wxFrame(NULL, wxID_ANY, title, w
 	wxListItem col2;
 	col2.SetId(2);
 	col2.SetText( _("Profit") );
+	col2.SetWidth(50);
 	m_item_list->InsertColumn(2, col2);
-		   
+
 	wxListItem col3;
 	col3.SetId(3);
 	col3.SetText( _("Distance") );
+	col3.SetWidth(100);
 	m_item_list->InsertColumn(3, col3);
 
 	wxListItem col4;
 	col4.SetId(4);
 	col4.SetText( _("Velocity") );
+	col4.SetWidth(100);
 	m_item_list->InsertColumn(4, col4);
 
 	wxListItem col5;
 	col5.SetId(5);
 	col5.SetText( _("Minutes til Arrival") );
+	col5.SetWidth(100);
 	m_item_list->InsertColumn(5, col5);
 
 	getFleetData(*m_item_list);

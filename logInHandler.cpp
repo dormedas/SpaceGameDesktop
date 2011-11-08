@@ -16,12 +16,12 @@ LogInHandler::LogInHandler()
 	}
 
 	wxPasswordEntryDialog passDiag(0, wxT("Enter your password"), wxT("Caption."), wxT("Enter Password"), wxOK | wxCANCEL);
-	
+
 	if(passDiag.ShowModal() != wxID_OK)
 		wxMessageBox(wxT("Must enter username to request this data."), wxT("Error"));
-	
-	mUsername = dialog.GetValue();
-	mPassword = passDiag.GetValue();
+
+	mUsername = dialog.GetValue().mb_str();
+	mPassword = passDiag.GetValue().mb_str();
 	return;
 }
 

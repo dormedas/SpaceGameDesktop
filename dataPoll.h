@@ -1,6 +1,6 @@
 #include <sstream>
 #include <string>
-#include "jsonxx\jsonxx.h"
+#include "jsonxx/jsonxx.h"
 #include "curl/curl.h"
 
 class DataPoll

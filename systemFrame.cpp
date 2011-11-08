@@ -35,16 +35,16 @@ void getSystemData(wxListCtrl& listCtrl)
 	{
 		x = o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<jsonxx::number>("num_planets");
 		temp << x;
-		wxString tempNum = temp.str();
+		wxString tempNum(temp.str().c_str(), wxConvUTF8);
 
-		wxString tempName = wxString(o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<string>("name"));
+		wxString tempName(o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<string>("name").c_str(), wxConvUTF8);
 
 		bool y = o.get<jsonxx::Array>("data").get<jsonxx::Object>(i).get<bool>("hasHabitable");
 
 		if(y)
-			tempHabitable = wxString("Yes");
+			tempHabitable = wxString("Yes", wxConvUTF8);
 		else
-			tempHabitable = wxString("No");
+			tempHabitable = wxString("No", wxConvUTF8);
 
 		wxListItem item;
 
